@@ -16,8 +16,8 @@ class ContactList extends Component
 
     public function delete(Contact $contact)
     {
-        // Verifica se o usuário atual é dono do contato
-        if ($contact->user_id !== auth()->id()) {
+        // Verifica se o usuário está logado e é dono do contato
+        if (!auth()->check() || $contact->user_id !== auth()->id()) {
             return;
         }
 
@@ -25,28 +25,19 @@ class ContactList extends Component
         session()->flash('success', 'Contato excluído com sucesso!');
     }
 
+    private function getContacts(): LengthAwarePaginator
+    {
+        return Contact::where(function($query) {
+            $query->where('name', 'like', "%{$this->search}%")
+                  ->orWhere('email', 'like', "%{$this->search}%");
+        })->paginate($this->perPage);
+    }
+
     public function with(): array
     {
         return [
             'contacts' => $this->getContacts()
         ];
-    }
-
-    private function getContacts(): LengthAwarePaginator
-    {
-        if (!auth()->check()) {
-            // Retorna uma coleção vazia paginada
-            return new \Illuminate\Pagination\LengthAwarePaginator(
-                [], 0, $this->perPage
-            );
-        }
-
-        return auth()->user()->contacts()
-            ->where(function($query) {
-                $query->where('name', 'like', "%{$this->search}%")
-                      ->orWhere('email', 'like', "%{$this->search}%");
-            })
-            ->paginate($this->perPage);
     }
 
     public function render()
