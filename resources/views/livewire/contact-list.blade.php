@@ -33,8 +33,8 @@
                                     <a href="{{ route('contacts.edit', $contact) }}" 
                                        class="text-yellow-600 hover:text-yellow-900 mr-3">Editar</a>
                                     <button wire:click="delete({{ $contact->id }})"
-                                            class="text-red-600 hover:text-red-900"
-                                            onclick="return confirm('Tem certeza?')">
+                                            wire:confirm="Tem certeza que deseja excluir este contato?"
+                                            class="text-red-600 hover:text-red-900">
                                         Excluir
                                     </button>
                                 @endauth

@@ -14,6 +14,17 @@ class ContactList extends Component
     public $search = '';
     public $perPage = 10;
 
+    public function delete(Contact $contact)
+    {
+        // Verifica se o usuário atual é dono do contato
+        if ($contact->user_id !== auth()->id()) {
+            return;
+        }
+
+        $contact->delete();
+        session()->flash('success', 'Contato excluído com sucesso!');
+    }
+
     public function with(): array
     {
         return [
