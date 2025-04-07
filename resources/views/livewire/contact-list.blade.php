@@ -30,13 +30,15 @@
                                 <a href="{{ route('contacts.show', $contact) }}" 
                                    class="text-indigo-600 hover:text-indigo-900 mr-3">Ver</a>
                                 @auth
-                                    <a href="{{ route('contacts.edit', $contact) }}" 
-                                       class="text-yellow-600 hover:text-yellow-900 mr-3">Editar</a>
-                                    <button wire:click="delete({{ $contact->id }})"
-                                            wire:confirm="Tem certeza que deseja excluir este contato?"
-                                            class="text-red-600 hover:text-red-900">
-                                        Excluir
-                                    </button>
+                                    @if($contact->user_id === auth()->id())
+                                        <a href="{{ route('contacts.edit', $contact) }}" 
+                                           class="text-yellow-600 hover:text-yellow-900 mr-3">Editar</a>
+                                        <button wire:click="delete({{ $contact->id }})"
+                                                wire:confirm="Tem certeza que deseja excluir este contato?"
+                                                class="text-red-600 hover:text-red-900">
+                                            Excluir
+                                        </button>
+                                    @endif
                                 @endauth
                             </td>
                         </tr>

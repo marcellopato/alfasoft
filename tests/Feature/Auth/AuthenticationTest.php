@@ -59,9 +59,7 @@ class AuthenticationTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $this->actingAs($user);
-
-        $response = $this->get('/dashboard');
+        $response = $this->actingAs($user)->get('/contacts'); // Alterado de '/dashboard'
 
         $response
             ->assertOk()
