@@ -1,6 +1,8 @@
 <?php
 
+use App\Livewire\ContactList;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ContactController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,8 +15,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+// Rota pública para listagem usando Livewire
+Route::get('/', ContactList::class);
+Route::get('/contacts', ContactList::class)->name('contacts.index');
+
+// Rotas protegidas por autenticação
+Route::middleware('auth')->group(function () {
+    Route::resource('contacts', ContactController::class)
+        ->except(['index']);
 });
 
-Route::resource('contacts', ContactController::class);
+require __DIR__.'/auth.php';
